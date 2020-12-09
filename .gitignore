@@ -1,0 +1,6 @@
+credentials
+terraform.*
+.terraform*
+.git
+
+
