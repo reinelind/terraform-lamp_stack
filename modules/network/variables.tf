@@ -7,8 +7,8 @@ variable "cidr-nat" {
     type = map
 
     default = {
-        dev = "10.0.5.0/28"
-        stage = "10.0.5.0/28"
+        dev = "10.0.0.0/24"
+        stage = "10.0.0.0/24"
     }
 }
 
@@ -17,8 +17,8 @@ variable "cidr" {
     type = map
 
     default = {
-        dev = "10.0.0.0/24"
-        stage = "10.0.0.0/24"
+        dev = "10.0.1.0/24"
+        stage = "10.0.1.0/24"
     }
 }
 

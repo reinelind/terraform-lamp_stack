@@ -1,6 +1,15 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 3.0"
+      
+    }
+  }
+}
+
 provider "aws" {
-  version = "~> 3.0"
-  region  = var.region
+  region = "us-east-1"
 }
 
 resource "aws_vpc" "network-vpc" {
@@ -65,7 +74,7 @@ resource "aws_route_table" "network-rt" {
 
 resource "aws_route_table" "nat-rt"{
 
-  vpc_id = aws_vpc.network-vpc.id
+   vpc_id         = aws_vpc.network-vpc.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -73,35 +82,29 @@ resource "aws_route_table" "nat-rt"{
   }
 }
 
-resource "aws_main_route_table_association" "network-main_rt_association" {
-  vpc_id         = aws_subnet.network-subnet.id
+resource "aws_route_table_association" "network-main_rt_association" {
+  subnet_id      = aws_subnet.network-subnet-nat.id
   route_table_id = aws_route_table.network-rt.id
 }
 
 resource "aws_route_table_association" "network-secondary_rt_association" {
-  subnet_id         = aws_subnet.network-subnet-nat.id
-  route_table_id    = aws_route_table.nat-rt.id
+  subnet_id        = aws_subnet.network-subnet.id
+  route_table_id   = aws_route_table.nat-rt.id
 }
 
 
 resource "aws_elb" "network-elb" {
   name = "elb"
-  subnets   = [aws_subnet.network-subnet.id]
+  subnets   = [aws_subnet.network-subnet-nat.id]
   security_groups = [aws_security_group.network-sg.id]
 
-  # listener {
-  #   instance_port     = 80
-  #   instance_protocol = "http"
-  #   lb_port           = 80
-  #   lb_protocol       = "http"
-  # }
-  
   listener {
-    instance_port     = 22
-    instance_protocol = "tcp"
-    lb_port           = 22
-    lb_protocol       = "tcp"
+    instance_port     = 80
+    instance_protocol = "http"
+    lb_port           = 80
+    lb_protocol       = "http"
   }
+ 
   
   depends_on = [
     aws_internet_gateway.network-igw
@@ -117,10 +120,9 @@ depends_on = [
 
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat-eip.id
-  subnet_id     = aws_subnet.network-subnet.id
+  subnet_id     = aws_subnet.network-subnet-nat.id
 
   depends_on = [
     aws_internet_gateway.network-igw
   ]
 }
-############

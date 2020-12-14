@@ -9,7 +9,7 @@ variable "keypair_name" {
 variable "public_key" {
     type = map
     default = {
-        dev =  "./aws_key.pub"
+        dev =  "./dev_key.pub"
         prod = "./prod_key.pub"
     }
 }
@@ -65,9 +65,5 @@ variable "region" {
 }
 
 variable "env" {
-    type = string
-}
-
-variable "private_key" {
     type = string
 }

@@ -2,5 +2,5 @@ credentials
 terraform.*
 .terraform*
 .git
-
+dev_key*
 

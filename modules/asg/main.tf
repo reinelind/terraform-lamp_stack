@@ -1,5 +1,5 @@
 provider "aws" {
-  version = "~> 2.0"
+  version = "~> 3.0"
   region  = var.region
 }
 
@@ -47,23 +47,23 @@ resource "aws_autoscaling_attachment" "asg-attachment" {
   elb                    = var.network-elb
 }
 
-resource "aws_instance" "Bastion" {
-  ami                         = "ami-0d1ceb857bc85debb"
-  instance_type               = lookup(var.instance_type, var.env)
+# resource "aws_instance" "Bastion" {
+#   ami                         = "ami-0d1ceb857bc85debb"
+#   instance_type               = lookup(var.instance_type, var.env)
 
-  key_name                    = aws_key_pair.asg-keypair.key_name
-  vpc_security_group_ids      = [var.network-sg]
-  subnet_id                   = var.network-zone_identifier
+#   key_name                    = aws_key_pair.asg-keypair.key_name
+#   vpc_security_group_ids      = [var.network-sg]
+#   subnet_id                   = "10.0.0.0/24"
   
-  user_data           = file("user_data.sh")
+#   user_data           = file("user_data.sh")
 
-  associate_public_ip_address = true
-  tags = {
-    Name = "HelloWorld"
-  }
+#   associate_public_ip_address = true
+#   tags = {
+#     Name = "HelloWorld"
+#   }
 
-  depends_on = [
-    aws_key_pair.asg-keypair
-  ]
-}
+#   depends_on = [
+#     aws_key_pair.asg-keypair
+#   ]
+# }
 
